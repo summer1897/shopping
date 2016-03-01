@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<mvc:annotation-driven/>
+	<!-- 指示Spring MVC哪些静态资源不用通过DispatcherServlet处理 -->
+	<mvc:resources location="/WEB-INF/asserts/" mapping="/asserts/**" />
+	
+	<!-- 指定扫描的controller所在包路径 -->
+	<context:component-scan base-package="com.shopping.controller"/>
+	<!-- 指定DAO组件所在包路径 -->
+	<context:component-scan base-package="com.shopping.dao"/>
+	<!-- 指定服务组件所在包路径 -->
+	<context:component-scan base-package="com.shopping.service"/>
+	
+	<!-- 注入视图解析类，并设置视图页面访问路径前缀、后缀 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 默认会在任何视图页面加上这个路径前缀 -->
+		<property name="prefix" value="/WEB-INF/view/"/>
+		<!-- 默认会在视图资源后面加上.jsp后缀 -->
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 配置视图页面解析编码 -->
+	<bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">  
+        <property name="supportedMediaTypes">  
+            <list>  
+                <value>text/plain;charset=UTF-8</value>  
+            </list>  
+        </property>  
+    </bean>
+    
+    <!-- JSON数据解析配置 -->
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>  
+    <bean  class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
+        <property name="messageConverters">  
+            <list>  
+                <ref bean="stringConverter" />  
+                <ref bean="jsonConverter" />  
+            </list>  
+        </property>  
+    </bean>
+    
+    <!-- <bean name="/*.jsp" class="org.springframework.web.servlet.mvc.UrlFilenameViewController">
+    	<property name="suffix" value=".jsp"/> 
+	</bean> -->
+    
+    <!-- 注入文件上传组件 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</bean>
+
+</beans>
