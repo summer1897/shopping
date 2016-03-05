@@ -22,7 +22,6 @@ public class User {
 	private int age;
 	public User(){}
 	public User(Integer id, String name, String sex, int age) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.sex = sex;
